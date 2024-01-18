@@ -1,0 +1,40 @@
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: voting
+  name: voting
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: voting
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: voting
+    spec:
+      containers:
+      - image: naveenbabuch/rollingupdate:latest
+        name: example-voting-app-worker-n5tsf
+        readinessProbe:
+         httpGet:
+          path: /
+          port: 80
+         initialDelaySeconds: 10
+         periodSeconds: 10
+         successThreshold: 1
+         failureThreshold: 3  
+        livenessProbe:
+         httpGet:
+          path: /
+          port: 80
+         initialDelaySeconds: 20
+         periodSeconds: 10
+         successThreshold: 1
+         failureThreshold: 3 
+

@@ -1,0 +1,144 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: alphanginx01
+  name: alphanginx01
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: alphanginx01
+  template:
+    metadata:
+      labels:
+        app: alphanginx01
+    spec:
+      containers:
+      - image: sreeharshav/flask:v1
+        name: flask
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: alphanginx01
+  name: alphanginx01
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 5000
+  selector:
+    app: alphanginx01
+
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: default-deny-all
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: alphanginx01
+  ingress: []
+  
+
+#Allow Traffic Only From nginxpods to utils POD which is blocked
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-nginxpod-to-utils
+  namespace: alpha
+spec:
+  podSelector:
+    matchLabels:
+      ns: alpha
+  ingress:
+  - from:
+      - podSelector:
+          matchLabels:
+            app: alphanginx01
+
+
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-nginxpod-to-utils
+  namespace: bravo
+spec:
+  podSelector:
+    matchLabels:
+      ns: bravo
+  ingress:
+  - from:
+      - podSelector:
+          matchLabels:
+            app: bravonginx01
+
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-nginxpod-to-utils
+  namespace: charlie
+spec:
+  podSelector:
+    matchLabels:
+      ns: charlie
+  ingress:
+  - from:
+      - podSelector:
+          matchLabels:
+            app: charlienginx01
+            
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-alpha-to-nginx
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: alphanginx01
+  ingress:
+  - from:
+      - namespaceSelector: 
+          matchLabels:
+            nsp: alpha
+      - podSelector:
+          matchLabels:
+            ns: alpha
+
+
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-bravo-charlie-to-nginx
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: alphanginx01
+  ingress:
+  - from:
+      - namespaceSelector: 
+          matchLabels:
+            nsp: bravo
+      - podSelector:
+          matchLabels:
+            ns: bravo
+
+  - from:
+      - namespaceSelector: 
+          matchLabels:
+            nsp: charlie
+      - podSelector:
+          matchLabels:
+            ns: charlie

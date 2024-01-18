@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: javawebappdeployment
+  labels:
+    app: javawebapp
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: javawebapp
+  template:
+    metadata:
+      name: javawebappdeploymentpod
+      labels:
+        app: javawebapp
+    spec:
+      containers:
+      - name: javawebappdeploymentcontainer
+        image: ashokit/javawebapp
+        ports:
+        - containerPort: 8080
+
+
+---
+### NodePort service manifest file ####
+apiVersion: v1
+kind: Service
+metadata:
+ name: javawebappnpdeploymentservice
+spec:
+  type: NodePort
+  selector:
+    app: javawebapp
+  ports:
+    - port: 80
+      targetPort: 8080
+
+
+

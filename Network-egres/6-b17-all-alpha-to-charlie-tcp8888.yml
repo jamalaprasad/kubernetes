@@ -1,0 +1,47 @@
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-traffic-from-alpha-to-charlie-on-tcp8888
+  namespace: charlie
+spec:
+  podSelector: 
+   matchLabels:
+    ns: charlie
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          nsp: alpha
+    - podSelector:
+        matchLabels:
+          ns: alpha
+    ports:
+    - protocol: TCP
+      port: 8888
+
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-traffic-from-alpha-to-charlie-on-tcp8888
+  namespace: alpha
+spec:
+  podSelector: 
+   matchLabels:
+    ns: alpha
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          nsp: charlie
+    - podSelector:
+        matchLabels:
+          ns: charlie
+    ports:
+    - protocol: TCP
+      port: 8888

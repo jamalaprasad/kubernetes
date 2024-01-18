@@ -1,0 +1,44 @@
+ku run utils --image=sreeharshav/utils:latest -n default
+ku run utils2 --image=sreeharshav/utils:latest -n default
+
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: deny-ingress
+  namespace: default
+spec:
+  podSelector: 
+    matchLabels:
+      run: utils
+  policyTypes:
+  - Ingress
+
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: deny-egress
+  namespace: default
+spec:
+  podSelector: 
+    matchLabels:
+      run: utils
+  policyTypes:
+  - Egress
+
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: deny-ingress-egress
+  namespace: default
+spec:
+  podSelector: 
+    matchLabels:
+      run: utils
+  policyTypes:
+  - Ingress
+  - Egress
+  
+  

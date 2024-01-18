@@ -1,0 +1,9 @@
+aws ec2 create-volume --volume-type gp2 --size 2 --availability-zone ap-south-1a --tag-specifications 'ResourceType=volume,Tags=[{Key=KubernetesCluster,Value=k8stech.xyz},{Key=Name,Value=aws-pv1}]' 
+
+aws ec2 create-volume --volume-type gp2 --size 4 --availability-zone ap-south-1a --tag-specifications 'ResourceType=volume,Tags=[{Key=KubernetesCluster,Value=k8stech.xyz},{Key=Name,Value=aws-pv2}]' 
+
+aws ec2 create-volume --volume-type gp2 --size 6 --availability-zone ap-south-1a --tag-specifications 'ResourceType=volume,Tags=[{Key=KubernetesCluster,Value=k8stech.xyz},{Key=Name,Value=aws-pv3}]' 
+
+ aws ec2 create-volume --volume-type gp2 --size 8 --availability-zone ap-south-1a --tag-specifications 'ResourceType=volume,Tags=[{Key=KubernetesCluster,Value=k8stech.xyz},{Key=Name,Value=aws-pv4}]' 
+
+aws ec2 create-volume --volume-type gp2 --size 10 --availability-zone ap-south-1a --tag-specifications 'ResourceType=volume,Tags=[{Key=KubernetesCluster,Value=k8stech.xyz},{Key=Name,Value=aws-pv5}]'

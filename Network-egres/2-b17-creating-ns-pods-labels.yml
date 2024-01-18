@@ -1,0 +1,41 @@
+#Creating Namespaces & Utilpods
+kubectl create ns alpha
+kubectl create ns bravo
+kubectl create ns charlie
+kubectl create ns mysqldb
+
+ 
+kubectl label ns mysqldb nsp=mysqldb
+
+#Deploy UTILS pod in all namespaces
+ku run -n alpha alphautils1 --image=sreeharshav/utils -l ns=alpha
+ku run -n alpha alphautils2 --image=sreeharshav/utils -l ns=alpha
+
+ku run -n bravo bravoutils1 --image=sreeharshav/utils -l ns=bravo
+ku run -n bravo bravoutils2 --image=sreeharshav/utils -l ns=bravo
+
+ku run -n charlie charlieutils1 --image=sreeharshav/utils --labels ns=charlie
+ku run -n charlie charlieutils2 --image=sreeharshav/utils --labels ns=charlie
+
+ku get po -n alpha -o wide --no-headers && ku get po -n bravo -o wide --no-headers && ku get po -n charlie -o wide --no-headers
+
+alias allpods='ku get po -n alpha -o wide --no-headers && ku get po -n bravo -o wide --no-headers && ku get po -n charlie -o wide --no-headers'
+
+
+
+ku exec -it  alphautils1 -n alpha -- ping -c 3 100.102.237.70 \
+&& ku exec -it  alphautils2 -n alpha -- ping -c 3 100.112.56.133 \
+&& ku exec -it  alphautils1 -n alpha -- ping -c 3 100.102.237.71 \
+&& ku exec -it  alphautils2 -n alpha -- ping -c 3 100.112.56.134
+
+
+ku exec -it  bravoutils1 -n bravo -- ping -c 3 100.102.237.68 \
+&& ku exec -it  bravoutils2 -n bravo -- ping -c 3 100.102.237.69 \
+&& ku exec -it  bravoutils1 -n bravo -- ping -c 3 100.102.237.71 \
+&& ku exec -it  bravoutils2 -n bravo -- ping -c 3 100.112.56.134
+
+
+ku exec -it  charlieutils1 -n charlie -- ping -c 3 100.102.237.68 \
+&& ku exec -it  charlieutils2 -n charlie -- ping -c 3 100.102.237.69 \
+&& ku exec -it  charlieutils1 -n charlie -- ping -c 3 100.102.237.70 \
+&& ku exec -it  charlieutils2 -n charlie -- ping -c 3 100.112.56.133
