@@ -1,8 +1,0 @@
-#!/bin/bash
-kops create cluster --name=k8stech.xyz \
---state=s3://k8stech.xyz --zones=ap-south-1a \
---node-count=3 --master-count=1 --node-size=t2.small --master-size=t2.medium \
---master-zones=ap-south-1a --master-volume-size 10 --node-volume-size 10 \
---topology private --networking calico \
---ssh-public-key ~/.ssh/id_rsa.pub \
---dns-zone=k8stech.xyz --yes

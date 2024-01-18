@@ -1,5 +1,0 @@
-eksctl create cluster \
---name k8seksnew \
---version 1.26 \
---zones=ap-south-1a,ap-south-1b,ap-south-1c \
---without-nodegroup       
