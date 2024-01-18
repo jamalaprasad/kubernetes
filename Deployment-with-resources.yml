@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: deployment
+  name: deployment
+  namespace: apple
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: deployment
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: deployment
+    spec:
+      containers:
+      - image: ashokit/javawebapp
+        name: javawebapp
+        resources:
+          limits:
+            cpu: 250m
+            memory: 700Mi

@@ -1,0 +1,44 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: hpadeploymentautoscaler
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: hpadeployment
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 10
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hpadeployment
+  labels:
+    name: hpadeployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hpapod
+  template:
+    metadata:
+      labels:
+        app: hpapod
+    spec:
+      containers:
+      - name: hpacontainer
+        image: nginx:latest
+        ports:
+        - name: http
+          containerPort: 80 
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "150m"      
+
