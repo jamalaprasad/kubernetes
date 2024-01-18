@@ -1,0 +1,49 @@
+#https://medium.com/the-programmer/working-with-node-affinity-in-kubernetes-40bc79d16f2f
+kubectl label node i-007d6a517ab67f906 env=one
+kubectl label node i-080151329a9fb1c6d env=two
+kubectl label node i-08fd11925e913b080 env=three
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: preferred-soft
+  name: preferred-soft
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      run: preferred-soft
+  template:
+    metadata:
+      labels:
+        run: preferred-soft
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 40
+            preference:
+              matchExpressions:
+              - key: env
+                operator: In
+                values:
+                - one
+          - weight: 20
+            preference:
+              matchExpressions:
+              - key: env
+                operator: In
+                values:
+                - two
+          - weight: 10
+            preference:
+              matchExpressions:
+              - key: env
+                operator: In
+                values:
+                - three
+      containers:
+      - image: nginx
+        name: deploy01

@@ -1,0 +1,61 @@
+kubectl taint node ip-172-20-116-111.ec2.internal perf=high:NoExecute
+kubectl taint node ip-172-20-60-79.ec2.internal   perf=high:NoExecute
+
+kubectl taint node ip-172-20-62-226.ec2.internal  perf=high:NoSchedule
+kubectl taint node ip-172-20-76-216.ec2.internal  perf=high:NoSchedule
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: myapp1
+    owner: javateam
+  name: myapp1
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: myapp1
+      owner: javateam
+  template:
+    metadata:
+      labels:
+        app: myapp1
+        owner: javateam
+    spec:
+      containers:
+      - image: sreeharshav/rollingupdate:v5
+        name: rollingupdate
+      tolerations:
+         - key: "perf"
+           operator: "Equal"
+           value: "high"
+           effect: "NoSchedule"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: myapp2
+  name: myapp2
+spec:
+  replicas: 16
+  selector:
+    matchLabels:
+      app: myapp2
+  template:
+    metadata:
+      labels:
+        app: myapp2
+    spec:
+      containers:
+      - image: sreeharshav/rollingupdate:v5
+        name: rollingupdate
+      tolerations:
+         - key: "perf"
+           operator: "Equal"
+           value: "high"
+           effect: "NoExecute"
+
